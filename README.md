@@ -1,5 +1,7 @@
 # MQTT Communication with Docker 
 
+Schema for quickly communication between an MQTT server and docker containers
+
 Based in:
 
 https://medium.com/@abdallahjarwan/mqtt-application-using-docker-6e61d7a3642d
