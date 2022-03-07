@@ -1,0 +1,48 @@
+version: "3"
+services:
+  mqtt:
+    image: toke/mosquitto
+    # network_mode: bridge
+    container_name: mqtt
+    expose:
+      - 1883
+    ports:
+      - 1883:1883
+    restart: unless-stopped
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.0.2
+
+  subscriber-python:
+    build: .
+    container_name: subscriber-python
+    stdin_open: true
+    tty: true
+    depends_on:
+      - "mqtt"
+    links: 
+      - "mqtt"
+    networks:
+      customnetwork:
+        ipv4_address: 172.20.0.3
+
+  publisher-python:
+    build: .
+    container_name: publisher-python
+    stdin_open: true
+    tty: true
+    depends_on:
+      - "mqtt"
+      - "subscriber-python"
+    links: 
+      - "mqtt"
+      - "subscriber-python"
+    networks:
+      - customnetwork
+
+networks:
+  customnetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
